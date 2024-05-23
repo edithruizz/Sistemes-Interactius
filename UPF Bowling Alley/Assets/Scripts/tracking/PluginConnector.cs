@@ -474,19 +474,23 @@ public class PluginConnector : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.W))
         {
-            players[playerSelected - 1].transform.Translate(Vector3.forward * Time.deltaTime * trackingDisabledPlayerSpeed);
+            players[playerSelected - 1].GetComponent<PlayerMovement>().setPosition(players[playerSelected - 1].transform.position + Vector3.forward * Time.deltaTime * trackingDisabledPlayerSpeed);
+            //players[playerSelected - 1].transform.Translate();
         }
         if (Input.GetKey(KeyCode.A))
         {
-            players[playerSelected - 1].transform.Translate(Vector3.left * Time.deltaTime * trackingDisabledPlayerSpeed);
+            players[playerSelected - 1].GetComponent<PlayerMovement>().setPosition(players[playerSelected - 1].transform.position + Vector3.left * Time.deltaTime * trackingDisabledPlayerSpeed);
+            //players[playerSelected - 1].transform.Translate(Vector3.left * Time.deltaTime * trackingDisabledPlayerSpeed);
         }
         if (Input.GetKey(KeyCode.S))
         {
-            players[playerSelected - 1].transform.Translate(Vector3.back * Time.deltaTime * trackingDisabledPlayerSpeed);
+            players[playerSelected - 1].GetComponent<PlayerMovement>().setPosition(players[playerSelected - 1].transform.position + Vector3.back * Time.deltaTime * trackingDisabledPlayerSpeed);
+            //players[playerSelected - 1].transform.Translate(Vector3.back * Time.deltaTime * trackingDisabledPlayerSpeed);
         }
         if (Input.GetKey(KeyCode.D))
         {
-            players[playerSelected - 1].transform.Translate(Vector3.right * Time.deltaTime * trackingDisabledPlayerSpeed);
+            players[playerSelected - 1].GetComponent<PlayerMovement>().setPosition(players[playerSelected - 1].transform.position + Vector3.right * Time.deltaTime * trackingDisabledPlayerSpeed);
+            //players[playerSelected - 1].transform.Translate(Vector3.right * Time.deltaTime * trackingDisabledPlayerSpeed);
         }
     }
 

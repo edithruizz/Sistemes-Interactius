@@ -1,68 +1,102 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class Ball : MonoBehaviour
 {
     public float speed;
     private Rigidbody myBody;
-    private bool thrown = false;
+    public bool thrown { get; set; }
     public float horizontalSpeed;
+    public Vector3 restPosition;
+    private Vector3 initialPosition;
     private int count;
 
-    // Start is called before the first frame update
     void Start()
     {
-        // Assign the Rigidbody component to our private mybody variable
         myBody = GetComponent<Rigidbody>();
-
-        // Set the count to zero 
-        count = 0;
+        initialPosition = transform.position; //initial position
+        myBody.isKinematic = true;            //can move with player
+        count = 0;                            //set the count to zero 
     }
 
-    // Update is called once per frame
     void Update()
     {
-        BallMovement();
+        if (!thrown && myBody.isKinematic)
+        {
+            BallMovement();
+        }
+    }
+
+    public void SetPosition(Vector3 position)
+    {
+        transform.position = position;
     }
 
     void BallMovement()
     {
-        if (!thrown)
-        {
-            float xAxis = Input.GetAxis("Horizontal");
-            Vector3 position = transform.position;
-            position.x += xAxis * horizontalSpeed;
-            transform.position = position;
+        float xAxis = Input.GetAxis("Horizontal");
+        Vector3 position = transform.position;
+        //position.x += xAxis * horizontalSpeed;
+        transform.position = position;
+    }
 
-        }
-        if(!thrown && Input.GetKeyDown(KeyCode.Space))
-        {
-            thrown = true;
-            myBody.isKinematic = false;
-            myBody.velocity = new Vector3(0, 0, speed);
-        }
+    public void ThrowBall(Vector3 playerVelocity)
+    {
+        thrown = true;
+        myBody.isKinematic = false; //it doesn't depend on the player movement
+        //myBody.velocity = new Vector3(0, 0, speed);
+        myBody.velocity = playerVelocity + new Vector3(0, 0, 1);
     }
 
     private void FixedUpdate()
     {
-        if(thrown && myBody.IsSleeping())
-        {
-            SceneManager.LoadScene("Scene");
-        }
+
     }
 
-    void OnCollisionEnter(Collision collision)
+    //void OnCollisionEnter(Collision collision)
+    //{
+    //    if (collision.gameObject.CompareTag("Pin"))
+    //    {
+    //        collision.gameObject.SetActive(false);
+    //        count++;
+    //    }
+
+    //    if (collision.gameObject.CompareTag("End"))
+    //    {
+    //        ResetBallPosition();
+    //    }
+    //}
+
+    /*void OnTriggerEnter(Collider other)
     {
-        // Check if the collided GameObject is tagged as "Pin"
-        if (collision.gameObject.CompareTag("Pin"))
+        if (other.gameObject.CompareTag("Pin"))
         {
-            // Deactivate (disable) the pin GameObject
-            collision.gameObject.SetActive(false);
+            other.gameObject.SetActive(false);
+        }
 
-            // Increment the count variable
-            count++;
+        if (other.gameObject.CompareTag("End"))
+        {
+            ResetBallPosition();
+        }
+    }*/
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("End"))
+        {
+            ResetBallPosition();
         }
     }
+
+    void ResetBallPosition()
+    {
+        thrown = false;
+        myBody.isKinematic = true;
+        transform.position = restPosition;
+        //Debug.Log("Rest Position: " + transform.position);
+        myBody.velocity = Vector3.zero;
+        //speed = restSpeed;
+    }
 }
